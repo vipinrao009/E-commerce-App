@@ -1,5 +1,6 @@
-import { hashPassword } from "../helpers/userHelpers.js"
+import { comparePassword, hashPassword } from "../helpers/userHelpers.js"
 import User from "../models/userModel.js"
+import JWT from "jsonwebtoken"
 
 const registerUser = async(req,res)=>{
     try {
@@ -52,6 +53,62 @@ const registerUser = async(req,res)=>{
     }
 }
 
+const login = async(req,res)=>{
+    try {
+        const {email,password} = req.body
+
+        if(!email || !password){
+            return res.status(404).send({
+                success:false,
+                message:"Invalid email or password"
+            })
+        }
+
+        //Email validate and get the password 
+        const user = await User.findOne({email})
+        if(!user){
+            return res.status(404).send({
+                message:"Email is not registered",
+                success:false
+            })
+        }
+
+        //match the password 
+        const validpassword = await comparePassword(password,user.password)
+        if(!validpassword){
+            return res.status(4040).send({
+                message:"Invalid password",
+                success:false
+            })
+        }
+
+        //generate token
+        const token = await JWT.sign({_id:user._id},process.env.JWT_SECRET,
+        {
+            expiresIn:'7d'
+        })
+        
+        res.status(200).send({
+            message:"Login successfully",
+            success:true,
+            user:{
+                name:user.name,
+                email:user.email,
+                phone:user.phone,
+                address:user.address
+            },
+            token
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            message:"Failed to login",
+            success:false
+        })
+    }
+}
 export {
     registerUser,
+    login
 }

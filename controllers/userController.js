@@ -108,7 +108,12 @@ const login = async(req,res)=>{
         })
     }
 }
+
+const test = async(req,res)=>{
+    res.send("Protected route")
+}
 export {
     registerUser,
-    login
+    login,
+    test
 }

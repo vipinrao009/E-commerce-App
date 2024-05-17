@@ -1,9 +1,13 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <div className="bg-dark p-2 mt-4 text-light">
+    <div className="footer">
       <h4 className='text-center'> All Right Reserved &copy; E-commerce website</h4>
+      <p className='text-center'>
+        <Link to='/about'>About</Link> | <Link to='/contact'>Contact Us</Link> | <Link to='/policy'>Privacy Policy</Link>
+      </p>
     </div>
   )
 }

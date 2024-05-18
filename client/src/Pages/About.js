@@ -3,7 +3,7 @@ import Layout from '../Layout/Layout'
 
 const About = () => {
   return (
-    <Layout>
+    <Layout title={'about'}>
       <div className='container'>
         <div className='image'>
         <img

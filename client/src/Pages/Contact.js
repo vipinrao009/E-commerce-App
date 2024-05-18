@@ -5,7 +5,7 @@ import {BiMailSend, BiPhoneCall, BiSupport} from 'react-icons/bi'
 
 const Contact = () => {
   return (
-    <Layout>
+    <Layout title={'Contact us'}>
       <div className='contact-container'>
         <div className='contact-image col-md-6'>
           <img src="/images/contact1.jpg" alt="" width="500px" />

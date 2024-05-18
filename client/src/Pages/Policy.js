@@ -3,7 +3,7 @@ import Layout from '../Layout/Layout'
 
 const Policy = () => {
   return (
-    <Layout>
+    <Layout title={'Privacy policy'}>
       <div className='privacy-container'>
         <div className='image'>
         <img
@@ -14,7 +14,13 @@ const Policy = () => {
         </div> 
 
         <div className='privacy-content'>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore quis perspiciatis rerum voluptate, nemo non ut doloremque soluta, quae rem ab minima. Quo maiores itaque praesentium nulla, sed ipsum officia sint, illo quidem, omnis dolore voluptatem eaque nostrum eligendi tempore.</p>
+        <p>We use your information to:</p>
+        <ul>
+            <li>Provide and maintain our service, including customer support.</li>
+            <li>Improve and personalize your experience on our site.</li>
+            <li>Communicate with you about updates, promotions, and other information related to our services.</li>
+            <li>Understand how our website is used and how we can improve it.</li>
+        </ul>
         </div>       
       </div>
     </Layout>

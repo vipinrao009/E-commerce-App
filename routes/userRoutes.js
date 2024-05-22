@@ -10,4 +10,11 @@ router.post("/login",login)
 
 router.get("/test",requireSignIn,isAdmin, test)
 
+//Protected routes
+router.get("/user-auth",requireSignIn,(req,res)=>{
+    res.status(200).json({
+        ok:true
+    })
+})
+
 export default router

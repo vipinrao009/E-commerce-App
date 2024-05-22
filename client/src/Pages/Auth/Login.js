@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Layout from '../../Layout/Layout';
 import authStyle from "../../Style/authStyle.css";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { baseUrl } from '../../Layout/BaseUrl';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../Context/auth';
@@ -10,6 +10,7 @@ import { useAuth } from '../../Context/auth';
 const Login = () => {
     const navigate = useNavigate();
     const [auth, setAuth] = useAuth();
+    const location = useLocation()
 
     const [loginData, setLoginData] = useState({
         email: "",
@@ -41,7 +42,7 @@ const Login = () => {
                 localStorage.setItem('auth',JSON.stringify(res.data)) //json data localstorage me supprot nhi karta that's why data ko string me convert kar rahe ahi
                 // Add a delay before navigating
                 setTimeout(() => {
-                    navigate('/');
+                    navigate(location.state ||'/');
                 }, 1000); 
             } else {
                 toast.error(res.data.message);

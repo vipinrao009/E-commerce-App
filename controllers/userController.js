@@ -90,7 +90,7 @@ const login = async(req,res)=>{
         //match the password 
         const validpassword = await comparePassword(password,user.password)
         if(!validpassword){
-            return res.status(4040).send({
+            return res.status(404).send({
                 message:"Invalid password",
                 success:false
             })

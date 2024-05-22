@@ -5,9 +5,11 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { baseUrl } from '../../Layout/BaseUrl';
 import toast from 'react-hot-toast';
+import { useAuth } from '../../Context/auth';
 
 const Login = () => {
     const navigate = useNavigate();
+    const [auth, setAuth] = useAuth();
 
     const [loginData, setLoginData] = useState({
         email: "",
@@ -27,8 +29,16 @@ const Login = () => {
         e.preventDefault();
         try {
             const res = await axios.post(`${baseUrl}/api/v1/user/login`,{... loginData});
-            if (res.data.success) {
-                toast.success(res.data.message);
+            
+            if (res && res.data.success) {
+                toast.success(res.data && res.data.message);
+
+                setAuth({
+                    ...auth,
+                    user:res.data.user,
+                    token:res.data.token
+                })
+                localStorage.setItem('auth',JSON.stringify(res.data)) //json data localstorage me supprot nhi karta that's why data ko string me convert kar rahe ahi
                 // Add a delay before navigating
                 setTimeout(() => {
                     navigate('/');

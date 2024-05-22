@@ -122,3 +122,16 @@
     margin: 2rem;
     padding-top: 3rem;
 }
+/* =========== Register page ======================================= */
+.register{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 70vh;
+}
+
+.form-group{
+    margin-bottom: 9px;
+}
+

@@ -7,26 +7,41 @@ const registerUser = async(req,res)=>{
         const {name,email,password,phone,address} = req.body
         //Validation
         if(!name){
-            return res.send({error:"Name is required"})
+            return res.status(400).json({
+                message:"Name is required",
+                success:false
+            })
         }
         if(!email){
-            return res.send({error:"Email is required"})
+            return res.status(400).json({
+                message:"Email is required",
+                success:false
+            })
         }
         if(!password){
-            return res.send({error:"Password is required"})
+            return res.status(400).json({
+                message:"Password is required",
+                success:false
+            })
         }
         if(!phone){
-            return res.send({error:"Phone is required"})
+            return res.status(400).json({
+                message:"Phone is required",
+                success:false
+            })
         }
         if(!address){
-            return res.send({error:"Address is required"})
+            return res.status(400).json({
+                message:"Address is required",
+                success:false
+            })
         }
 
         const emailExist = await User.findOne({email})
         if(emailExist){
-            return res.status(200).send({
-                Message:"Already registered please login",
-                success:true
+            return res.status(200).json({
+                message:"Already registered please login",
+                success:false
             })
         }
 
@@ -37,14 +52,13 @@ const registerUser = async(req,res)=>{
         
         user.password = undefined
 
-        res.status(200).send({
+        res.status(200).json({
             message:"User register successfully..",
             success:true,
             user
         })
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             message:"Registration failed..",
             success:false,

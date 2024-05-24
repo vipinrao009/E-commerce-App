@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Layout from '../../Layout/Layout';
 import authStyle from "../../Style/authStyle.css";
 import axios from "axios";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { baseUrl } from '../../Layout/BaseUrl';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../Context/auth';
@@ -85,6 +85,10 @@ const Login = () => {
                             onChange={handleUserInput}
                             placeholder="Password"
                         />
+                    </div>
+
+                    <div className='mr-5 mb-2 decoration-none'>
+                        <Link to="/forgot-password">Forgot password</Link>
                     </div>
 
                     <button type="submit" className="btn btn-primary">

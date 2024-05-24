@@ -32,6 +32,11 @@ const userSchema = new Schema((
             required:true
         },
 
+        question:{
+            type:String,
+            required:true
+        },
+
         role:{
             type:Number,
             default:0

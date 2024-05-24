@@ -14,6 +14,7 @@ const Register = () => {
         email: "",
         phone: "",
         address: "",
+        question:"",
         password: ""
     });
 
@@ -101,6 +102,18 @@ const Register = () => {
                             value={userInput.address}
                             onChange={handleUserInput}
                             placeholder="Enter your address"
+                        />
+                    </div>
+
+                    <div className="form-group mb-2">
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="address"
+                            name="question"
+                            value={userInput.question}
+                            onChange={handleUserInput}
+                            placeholder="Enter your question"
                         />
                     </div>
 

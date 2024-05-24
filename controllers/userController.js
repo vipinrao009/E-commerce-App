@@ -4,7 +4,7 @@ import JWT from "jsonwebtoken"
 
 const registerUser = async(req,res)=>{
     try {
-        const {name,email,password,phone,address} = req.body
+        const {name,email,password,phone,address,question} = req.body
         //Validation
         if(!name){
             return res.status(400).json({
@@ -36,6 +36,12 @@ const registerUser = async(req,res)=>{
                 success:false
             })
         }
+        if(!question){
+            return res.status(400).json({
+                message:"Question is required",
+                success:false
+            })
+        }
 
         const emailExist = await User.findOne({email})
         if(emailExist){
@@ -48,7 +54,7 @@ const registerUser = async(req,res)=>{
         const hashedPassword = await hashPassword(password)
 
         //save in db
-        const user = await new User({name,email,phone,address,password:hashedPassword}).save()
+        const user = await new User({name,email,phone,address,question,password:hashedPassword}).save()
         
         user.password = undefined
 
@@ -123,11 +129,56 @@ const login = async(req,res)=>{
     }
 }
 
+const forgotPassword = async(req,res)=>{
+    const {email,question,newPassword} = req.body
+
+    if(!email){
+        return res.status(404).json({
+            message:"email is required...",
+            success:false
+        })
+    }
+
+    if(!question){
+        return res.status(404).json({
+            message:"Question is required...",
+            success:false
+        })
+    }
+
+    try {
+        const user = await User.findOne({email,question})
+
+        if(!user){
+            return res.status(404).json({
+                message:"User does not exist..",
+                success:false
+            })
+        }
+
+        const hashed = await hashPassword(newPassword)
+
+        await User.findByIdAndUpdate(user._id,{password:hashed})
+
+        return res.status(200).json({
+            message:"Password change successfully..",
+            success:true
+        })
+    } catch (error) {
+        return res.status(404).json({
+            message:"Failed to change password",
+            success:false,
+            error
+        })
+    }
+}
+
 const test = async(req,res)=>{
     res.send("Protected route")
 }
 export {
     registerUser,
     login,
-    test
+    test,
+    forgotPassword
 }

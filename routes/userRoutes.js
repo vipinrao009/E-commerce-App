@@ -12,8 +12,15 @@ router.post("/forgot-password",forgotPassword)
 router.get("/test",requireSignIn,isAdmin, test)
 
 
-//Protected routes
+//Protected user routes
 router.get("/user-auth",requireSignIn,(req,res)=>{
+    res.status(200).json({
+        ok:true
+    })
+})
+
+//Protected admin routes
+router.get("/admin-auth",requireSignIn,isAdmin ,(req,res)=>{
     res.status(200).json({
         ok:true
     })

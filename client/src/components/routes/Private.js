@@ -24,5 +24,4 @@ export default function PrivateRoutes(){
     },[auth?.token])
 
     return ok ? <Outlet/> : <Spinner/>
-
 }

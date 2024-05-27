@@ -15,6 +15,8 @@ import AdminDashboard from './Pages/Admin/AdminDashboard';
 import CreateCategory from './Pages/Admin/CreateCategory';
 import CreateProduct from './Pages/Admin/CreateProduct';
 import Users from './Pages/Admin/Users';
+import Profile from './Pages/User/Profile';
+import Orders from './Pages/User/Orders';
 
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
       {/* user Routes */}
       <Route path='/dashboard' element={<PrivateRoutes/>}>
         <Route path='user' element={<Dashboard/>}></Route>
+        <Route path='user/profile' element={<Profile/>}></Route>
+        <Route path='user/orders' element={<Orders/>}></Route>
       </Route>
 
       {/* admin Routes */}

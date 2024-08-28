@@ -5,6 +5,7 @@ import connectDB from "./config/db.connection.js";
 import morgan from "morgan";
 import user from "./routes/userRoutes.js"
 import category from "./routes/categoryRoutes.js"
+import product from "./routes/productRoutes.js"
 import cors from "cors"
 
 //configure env
@@ -29,6 +30,7 @@ app.use(morgan('dev'))
 //routes
 app.use("/api/v1/user",user)
 app.use("/api/v1/category",category)
+app.use("/api/v1/product",product)
 
 app.use("/", (req, res) => {
   res.send("<h1>Welcome to ecommerce website</h1>");

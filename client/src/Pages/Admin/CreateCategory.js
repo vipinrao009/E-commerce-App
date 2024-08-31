@@ -64,6 +64,20 @@ const CreateCategory = () => {
             toast.error(error.response.data.message)
         }
     }
+    
+    const handleDelete = async(id) =>{
+        try {
+            const {data} = await axios.delete(`${baseUrl}/api/v1/category/delete-category/${id}`)
+            console.log(data)
+            if(data){
+                toast.success(data.message);
+                getAllCategory();
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.response.data.message)            
+        }
+    }
 
     useEffect(()=>{ 
         getAllCategory()
@@ -100,7 +114,9 @@ const CreateCategory = () => {
                                                className='btn btn-primary ms-2'
                                                onClick={() => {setVisible(true);setUpdatedName(c.name); setSelected(c)}}
                                                >Edit</button>
-                                            <button className='btn btn-danger ms-2'>Delete</button>
+                                            <button className='btn btn-danger ms-2'
+                                               onClick={()=>{handleDelete(c._id)}}
+                                            >Delete</button>
                                         </td>
                                     </tr>
                                     </>

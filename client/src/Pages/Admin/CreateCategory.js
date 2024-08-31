@@ -5,10 +5,14 @@ import toast from 'react-hot-toast';
 import React, { useEffect, useState } from 'react'
 import { baseUrl } from '../../Layout/BaseUrl';
 import CategoryForm from '../../components/Form/CategoryForm';
+import { Modal } from 'antd'
 
 const CreateCategory = () => {
     const [category, setCategory] = useState([]);
     const [name,setName] = useState("");
+    const [visible,setVisible] = useState(false);
+    const [selected,setSelected] = useState(null);
+    const [updatedName,setUpdatedName] = useState("")
 
     const getAllCategory = async()=>{
         try {
@@ -32,6 +36,7 @@ const CreateCategory = () => {
             console.log(data)
             if(data?.success){
                 toast.success(`${data.category.name} is created`)
+                data.name = "";
                 getAllCategory()
             }
         } catch (error) {
@@ -40,7 +45,27 @@ const CreateCategory = () => {
         }
     }
 
-    useEffect(()=>{
+    const handleUpdate = async(e)=>{
+        e.preventDefault();
+        try {
+            const {data} = await axios.put(`${baseUrl}/api/v1/category/update-category/${selected._id}`,{name:updatedName})
+            console.log(data)
+            if(data.success){  
+                toast.success(data.message);
+                setSelected(null);
+                setUpdatedName(null);
+                setVisible(false);
+                getAllCategory();
+            }else{
+                toast.error(data.message)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.response.data.message)
+        }
+    }
+
+    useEffect(()=>{ 
         getAllCategory()
     },[])
 
@@ -58,7 +83,7 @@ const CreateCategory = () => {
                             <CategoryForm handleSubmit={handleSubmit} value={name} setValue={setName}/>
                         </div>
                         <div>
-                        <table className="table">
+                        <table className="table w-75">
                             <thead>
                                 <tr>
                                 <th scope="col">Name</th>
@@ -68,10 +93,14 @@ const CreateCategory = () => {
                             <tbody>
                                 {category.map((c)=>(
                                     <>
-                                    <tr>
-                                        <td key={c._id}>{c.name}</td>
+                                    <tr key={c._id}>
+                                        <td>{c.name}</td>
                                         <td>
-                                            <button className='btn btn-primary'>Edit</button>
+                                            <button 
+                                               className='btn btn-primary ms-2'
+                                               onClick={() => {setVisible(true);setUpdatedName(c.name); setSelected(c)}}
+                                               >Edit</button>
+                                            <button className='btn btn-danger ms-2'>Delete</button>
                                         </td>
                                     </tr>
                                     </>
@@ -79,6 +108,13 @@ const CreateCategory = () => {
                             </tbody>
                         </table>
                         </div>
+                        <Modal onCancel={()=>
+                          setVisible(false)}
+                          footer={null}
+                          visible ={visible}
+                        >
+                            <CategoryForm value={updatedName} setValue={setUpdatedName} handleSubmit={handleUpdate}/>
+                        </Modal>
                     </div>
                 </div>
             </div>

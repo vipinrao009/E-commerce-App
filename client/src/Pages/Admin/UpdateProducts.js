@@ -60,7 +60,7 @@ const UpdateProduct = () => {
   };
 
   // Create product function
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     try {
       const productData = new FormData();
       productData.append('name', createdData.name);
@@ -83,6 +83,19 @@ const UpdateProduct = () => {
       toast.error(error.response?.data?.message || "Error creating product");
     }
   };
+
+  const handleDelete = async() => {
+    try {
+      const {data} = await axios.delete(`${baseUrl}/api/v1/product/delete-product/${createdData.id}`)
+      if(data.success){
+        toast.success(data.message)
+        navigate('/dashboard/admin/products');
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
+  }
 
   useEffect(() => {
     getAllCategory();
@@ -224,9 +237,15 @@ const UpdateProduct = () => {
               </div>
 
               {/* Create product button */}
-              <div className="mt-3">
-                <button className="btn btn-primary" onClick={handleCreate}>Update Product</button>
-              </div>
+              <div className='col'>
+  <div className="mt-3">
+    <button className="btn btn-primary w-100" onClick={handleUpdate}>Update Product</button>
+  </div>
+  <div className="mt-3">
+    <button className="btn btn-danger w-100" onClick={handleDelete}>Delete Product</button>
+  </div>
+</div>
+
             </div>
           </div>
         </div>

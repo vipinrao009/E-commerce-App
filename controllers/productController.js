@@ -128,7 +128,7 @@ const deleteProduct = async(req,res)=>{
         await Product.findByIdAndDelete(id).select("-photo")
         res.status(200).json({
             message:"Product deleted successfully",
-            success:false
+            success:true
         })
     } catch (error) {
         res.status(400).json({

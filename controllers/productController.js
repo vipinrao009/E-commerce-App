@@ -93,7 +93,7 @@ const singleProduct = async(req,res) =>{
 
         res.status(200).json({
             message: "Product fetched successfully",
-            success: false,
+            success: true,
             product
         })
     } catch (error) {

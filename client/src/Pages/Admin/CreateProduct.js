@@ -50,9 +50,7 @@ const CreateProduct = () => {
       productData.append('category', createdData.category);
 
       const { data } = await axios.post(`${baseUrl}/api/v1/product/create-product`, productData);
-      if (data.success) {
-        console.log(data);
-        
+      if (data.success) {        
         toast.success('Product created successfully');
         navigate('/dashboard/admin/products');
       } else {

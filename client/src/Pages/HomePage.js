@@ -12,13 +12,17 @@ const HomePage = () => {
   const [category, setCategories] = useState([]);
   const [checked, setChecked] = useState([])
   const [radio, setRadio] = useState([])
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(1) //Initially false 
+
 
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(`${baseUrl}/api/v1/category/get-category`);
       if (data.success) {
         setCategories(data.category);
-        toast.success("Fetched the categories.");
+        // toast.success("Fetched the categories.");
       }
     } catch (error) {
       console.log(error);
@@ -28,9 +32,11 @@ const HomePage = () => {
   
   const getAllProducts = async () => {
     try {
-      const { data } = await axios.get(`${baseUrl}/api/v1/product/get-product`);
-
-      if (data.success) {
+      setLoading(true)
+      const { data } = await axios.get(`${baseUrl}/api/v1/product/product-list/${page}`);
+      setLoading(false)
+      setProducts(data?.product)
+      if (data?.success) {
         toast.success(data.message);
         setProducts(data.product);
       } else {
@@ -41,6 +47,45 @@ const HomePage = () => {
       toast.error(error.response?.data?.message || 'An error occurred');
     }
   };
+
+  useEffect(() => {
+    if(!checked.length || !radio.length) getAllProducts();
+  }, [checked.length,radio.length]);
+
+  // Get total count 
+  const getTotalCount = async ()=> {
+    try {
+      const {data} = await axios.get(`${baseUrl}/api/v1/product/product-count`);
+      if(data?.success){
+        setTotal(data?.total);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error fetching total count product");
+    }
+  }
+
+  useEffect(()=>{
+    getAllCategory();
+    getTotalCount()
+  },[])
+
+  // Load More products
+  const loadMore = async()=> {
+    try {
+      setLoading(true)
+      const {data} = await axios.get(`${baseUrl}/api/v1/product/product-list/${page}`);
+      console.log('more data',{data})
+      setLoading(false)
+      setProducts([...products, ...data?.product])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    if(page === 1) return
+    loadMore()
+  },[page])
   
   const handleFilter = async (value,id) => {
     let all = [...checked];
@@ -53,14 +98,6 @@ const HomePage = () => {
     setChecked(all)
   }
   
-  useEffect(()=>{
-    getAllCategory();
-  },[])
-
-  useEffect(() => {
-    if(!checked.length || !radio.length) getAllProducts();
-  }, [checked.length,radio.length]);
-
   useEffect(()=>{
     if(checked.length || radio.length) filterProduct();
   },[checked,radio])
@@ -128,6 +165,19 @@ const HomePage = () => {
                   </div>
                 </div>
             ))}
+
+            <div className='m-2 p-3'>
+              {products && products.length < total && (
+                <button 
+                  className='btn btn-warning' 
+                  onClick={(e)=>{
+                  e.preventDefault();
+                  setPage(page +1)
+                }}>
+                  {loading ? "loading..." : "Load More"}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

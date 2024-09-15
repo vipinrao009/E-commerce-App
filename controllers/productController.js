@@ -1,6 +1,7 @@
 import slugify from "slugify";
 import Product from "../models/ProductSchema.js";
 import fs from 'fs'
+import e from "express";
 
 const createProduct = async(req,res)=>{
     try {
@@ -218,6 +219,47 @@ const productFilter = async(req,res) =>{
         })
     }
 }
+
+const productCount = async(req,res)=> {
+    try {
+        const total = await Product.find({}).estimatedDocumentCount();
+        res.status(200).json({
+            message:"sliding Succesfully",
+            success:true,
+            total
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({
+            message:"Failed to slide",
+            success:false
+        })
+    }
+}
+
+// Product list based on page
+const productList = async(req,res)=> {
+    try {
+        const perPage = 3;
+        const page = req.params.page ? req.params.page : 1;
+        const product = await Product
+          .find({})
+          .select('-photo')
+          .skip((page -1) * perPage)
+          .limit(perPage)
+          .sort({createdAt:-1})
+        res.status(200).json({
+            message:'Fetched the product successfully',
+            success: true,
+            product
+        })
+    } catch (error) {
+        res.status(400).json({
+            message:"Failed to get product list",
+            success:false
+        })
+    }
+}
 export {
     createProduct,
     getAllProduct,
@@ -225,5 +267,8 @@ export {
     getPhoto,
     deleteProduct,
     updateProduct,
-    productFilter
+    productFilter,
+    productCount,
+    productList
+
 }

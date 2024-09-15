@@ -194,11 +194,36 @@ const updateProduct = async(req,res) =>{
         
     }
 }
+
+const productFilter = async(req,res) =>{
+    try {
+        const {checked,radio} = req.body;
+
+        console.log({checked,radio})
+        let args = {};
+        if(checked.length>0) args.category = checked;
+        args.price = { $gte: radio[0], $lte: radio[1] };
+
+        const products = await Product.find(args);
+        res.status(200).json({
+            message:"Filter Successfully",
+            success:true,
+            products
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({
+            message:"Failed to filter the product",
+            success:"false"
+        })
+    }
+}
 export {
     createProduct,
     getAllProduct,
     singleProduct,
     getPhoto,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    productFilter
 }

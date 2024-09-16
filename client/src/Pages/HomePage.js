@@ -5,6 +5,7 @@ import axios from 'axios';
 import { baseUrl } from  '.././Layout/BaseUrl'
 import {Checkbox , Radio} from 'antd'
 import { price } from '../components/Price';
+import { useNavigate } from 'react-router-dom';
 
 
 const HomePage = () => {
@@ -15,6 +16,7 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(1) //Initially false 
+  const navigate = useNavigate()
 
 
   const getAllCategory = async () => {
@@ -160,7 +162,7 @@ const HomePage = () => {
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text">{product.description.substring(0,30)}</p>
                     <p className="card-text">$ {product.price}</p>
-                    <button className='btn btn-primary ms-1'>More details</button>
+                    <button className='btn btn-primary ms-1' onClick={()=> navigate(`/detailed-product/${product.slug}`)}>More details</button>
                     <button className='btn btn-primary ms-1'>Add to Cart</button>
                   </div>
                 </div>

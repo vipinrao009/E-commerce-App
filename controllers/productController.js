@@ -285,6 +285,30 @@ const productSearch = async(req,res)=>{
         })
     }
 }
+
+const relatedProduct = async(req,res)=>{
+    try {
+        const {pid,cid} = req.params;
+        const product = await Product.find({
+            category:cid,
+            _id:{$ne:pid}
+        })
+        .select('-photo')
+        .limit(4)
+        .populate("category")
+
+        res.status(200).json({
+            message:"Similar products are fetched",
+            success:true,
+            product
+        })
+    } catch (error) {
+        res.status(400).json({
+            message:"Failed to get related product",
+            success:false
+        })
+    }
+}
 export {
     createProduct,
     getAllProduct,
@@ -295,5 +319,6 @@ export {
     productFilter,
     productCount,
     productList,
-    productSearch
+    productSearch,
+    relatedProduct
 }

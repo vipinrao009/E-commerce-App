@@ -157,6 +157,7 @@ const HomePage = () => {
                     src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
                     className="card-img-top small-card-img"
                     alt={product.name} 
+                    style={{ width: '300px', height:'250px'}} 
                   />
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>

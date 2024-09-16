@@ -260,6 +260,31 @@ const productList = async(req,res)=> {
         })
     }
 }
+
+const productSearch = async(req,res)=>{
+    try {
+        const keyword = req.params.keyword;
+        console.log(keyword)
+        
+        const result = await Product.find({
+            $or :[
+                {name:{$regex :keyword, $options:"i"}},
+                {description: {$regex :keyword, $options:"i"}}
+            ]
+        })
+        .select('-photo')
+        res.status(200).json({
+            message:"Search successfullly",
+            success:true,
+            result
+        })
+    } catch (error) {
+        res.status(400).json({
+            message: "Error in the search product",
+            success:false
+        })
+    }
+}
 export {
     createProduct,
     getAllProduct,
@@ -269,6 +294,6 @@ export {
     updateProduct,
     productFilter,
     productCount,
-    productList
-
+    productList,
+    productSearch
 }

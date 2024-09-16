@@ -19,6 +19,7 @@ import Profile from './Pages/User/Profile';
 import Orders from './Pages/User/Orders';
 import Products from './Pages/Admin/Products';
 import UpdateProduct from './Pages/Admin/UpdateProducts';
+import Search from './Pages/Search';
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/forgot-password' element={<ForgotPassword/>}/>
+      <Route path='/search' element={<Search/>}/>
+
       <Route path='*' element={<PageNotFount/>}/>
 
       {/* user Routes */}

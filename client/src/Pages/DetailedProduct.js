@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout.js'
 import axios from 'axios'
 import { baseUrl } from '../Layout/BaseUrl.js'
-import { json, useParams } from 'react-router-dom'
+import {useParams } from 'react-router-dom'
 
 const DetailedProduct = () => {
     const params = useParams()
@@ -74,7 +74,7 @@ const DetailedProduct = () => {
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text">{product.description.substring(0,30)}</p>
                     <p className="card-text">$ {product.price}</p>
-                    <button className='btn btn-primary ms-1'>Add to Cart</button>
+                    <button className='btn btn-primary ms-1'>More details</button>
                   </div>
                 </div>
             ))}

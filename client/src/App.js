@@ -21,6 +21,8 @@ import Products from './Pages/Admin/Products';
 import UpdateProduct from './Pages/Admin/UpdateProducts';
 import Search from './Pages/Search';
 import DetailedProduct from './Pages/DetailedProduct';
+import Categories from './Pages/Categories';
+import CategoryProduct from './Pages/CategoryProduct';
 
 
 function App() {
@@ -37,6 +39,9 @@ function App() {
       <Route path='/forgot-password' element={<ForgotPassword/>}/>
       <Route path='/search' element={<Search/>}/>
       <Route path='/detailed-product/:slug' element={<DetailedProduct/>}/>
+      <Route path='/categories' element={<Categories/>}/>
+      <Route path='/category/:slug' element={<CategoryProduct/>}/>
+
 
 
       <Route path='*' element={<PageNotFount/>}/>

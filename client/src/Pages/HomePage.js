@@ -22,9 +22,9 @@ const HomePage = () => {
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(`${baseUrl}/api/v1/category/get-category`);
-      if (data.success) {
+      if (data?.success) {
         setCategories(data.category);
-        // toast.success("Fetched the categories.");
+        toast.success("Fetched the categories.");
       }
     } catch (error) {
       console.log(error);

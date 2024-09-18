@@ -2,6 +2,7 @@ import slugify from "slugify";
 import Product from "../models/ProductSchema.js";
 import fs from 'fs'
 import e from "express";
+import Category from "../models/CategorySchema.js";
 
 const createProduct = async(req,res)=>{
     try {
@@ -309,6 +310,26 @@ const relatedProduct = async(req,res)=>{
         })
     }
 }
+
+const productCategory = async(req,res)=>{
+    try {
+        const slug = req.params.slug
+        const category = await Category.find({slug})
+        const product = await Product.find({category}).populate('category')
+        res.status(200).json({
+            message:"Product are fetched categorywise",
+            success:true,
+            category,
+            product
+        })
+    } catch (error) {
+        res.status(400).json({
+            message:"Failed to get categorywise product",
+            success:false,
+            error
+        })
+    }
+}
 export {
     createProduct,
     getAllProduct,
@@ -320,5 +341,6 @@ export {
     productCount,
     productList,
     productSearch,
-    relatedProduct
+    relatedProduct,
+    productCategory
 }

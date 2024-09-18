@@ -6,7 +6,7 @@ import { baseUrl } from  '.././Layout/BaseUrl'
 import {Checkbox , Radio} from 'antd'
 import { price } from '../components/Price';
 import { useNavigate } from 'react-router-dom';
-
+import { useCart } from '../Context/cart';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -16,6 +16,7 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(1) //Initially false 
+  const [cart,setCart] = useCart();
   const navigate = useNavigate()
 
 
@@ -164,7 +165,14 @@ const HomePage = () => {
                     <p className="card-text">{product.description.substring(0,30)}</p>
                     <p className="card-text">$ {product.price}</p>
                     <button className='btn btn-primary ms-1' onClick={()=> navigate(`/detailed-product/${product.slug}`)}>More details</button>
-                    <button className='btn btn-primary ms-1'>Add to Cart</button>
+                    <button className='btn btn-primary ms-1' 
+                        onClick={()=>{
+                        setCart([...cart,product])
+                        localStorage.setItem('cart',JSON.stringify([...cart,product]))
+                        toast.success("Item added to cart")
+                        }}
+                        >Add to Cart
+                    </button>
                   </div>
                 </div>
             ))}

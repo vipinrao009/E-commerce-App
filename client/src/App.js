@@ -23,6 +23,7 @@ import Search from './Pages/Search';
 import DetailedProduct from './Pages/DetailedProduct';
 import Categories from './Pages/Categories';
 import CategoryProduct from './Pages/CategoryProduct';
+import CartPage from './Pages/CartPage';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
       <Route path='/detailed-product/:slug' element={<DetailedProduct/>}/>
       <Route path='/categories' element={<Categories/>}/>
       <Route path='/category/:slug' element={<CategoryProduct/>}/>
+      <Route path='/cart' element={<CartPage/>}/>
 
 
 

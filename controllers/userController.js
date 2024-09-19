@@ -12,6 +12,12 @@ const registerUser = async(req,res)=>{
                 success:false
             })
         }
+        if(name.length <5){
+            return res.status(400).json({
+                message:"Name must be at least 5 characters",
+                success:false
+            })
+        }
         if(!email){
             return res.status(400).json({
                 message:"Email is required",

@@ -183,9 +183,41 @@ const forgotPassword = async(req,res)=>{
 const test = async(req,res)=>{
     res.send("Protected route")
 }
+
+const updateProfile = async(req,res)=>{
+    try {
+        const {name,email,password,phone,address} = req.body
+        if(!password && password.length < 6){
+            return res.status(400).json({
+                message:"Password is required and 6 charactor long"
+            })
+        }
+
+        const hashedPassword = await hashPassword(password)
+        const updatedUser = await User.findByIdAndUpdate(req.user._id,{
+            name:name || updatedUser.name,
+            email:email || updatedUser.email,
+            phone: phone || updatedUser.phone,
+            address: address || updatedUser.address,
+            password: hashedPassword || updatedUser.password
+        },{new:true})
+
+        res.status(200).json({
+            message:"Profile updated successfully",
+            success:true,
+            updatedUser
+        })
+    } catch (error) {
+        res.status(400).json({
+            message:"Failed to update the profile",
+            success:false
+        })
+    }
+}
 export {
     registerUser,
     login,
     test,
-    forgotPassword
+    forgotPassword,
+    updateProfile
 }

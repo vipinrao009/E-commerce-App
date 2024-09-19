@@ -1,5 +1,5 @@
 import express from "express"
-import { login, registerUser, test, forgotPassword } from "../controllers/userController.js"
+import { login, registerUser, test, forgotPassword, updateProfile } from "../controllers/userController.js"
 import { isAdmin, requireSignIn } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
@@ -25,5 +25,7 @@ router.get("/admin-auth",requireSignIn,isAdmin ,(req,res)=>{
         ok:true
     })
 })
+ 
+router.put("/update-profile",requireSignIn,updateProfile)
 
 export default router

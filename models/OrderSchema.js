@@ -1,24 +1,26 @@
 import { model,Schema,mongoose} from "mongoose";
-
 const orderSchema = new Schema({
-    products:[
-        {
-            type:mongoose.ObjectId,
-            ref:"Product"
-        }
-    ],
-    payments:{},
-    buyer:{
-        type:mongoose.ObjectId,
-        ref:"User"
+    products: [{
+        type: mongoose.ObjectId,
+        ref: "Product"
+    }],
+    payment: {  // Changed to 'payment' for consistency
+        id: String,  // e.g., transaction ID
+        status: String,
+        amount: String,
+        currency: String,
+        // Add other relevant fields from the result object as needed
     },
-    status:{
-        type:String,
-        default:"Not Process",
-        enum:["Not Process","Processing", "Shipped", "Deliverd", "Canceled"]
+    buyer: {
+        type: mongoose.ObjectId,
+        ref: "User"
+    },
+    status: {
+        type: String,
+        default: "Not Process",
+        enum: ["Not Process", "Processing", "Shipped", "Delivered", "Canceled"]
     }
-},{timestamps:true})
+}, { timestamps: true });
 
-const Order = model("Order",orderSchema)
-
-export default Order
+const Order = model("Order", orderSchema);
+export default Order;

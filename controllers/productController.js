@@ -363,49 +363,73 @@ const paymentToken = async(req,res)=>{
 // subscribe payment
 const paymentSubscribe = async (req, res) => {
     try {
-      const { cart, nounce } = req.body;
-
-      let total = 0;
-  
-      // Calculate total
-      cart.map((p) => {
-        total += p.price; 
-      });
-  
-      // Create a new transaction
-      let newTransaction = await gateway.transaction.sale(
-        {
-          amount: total,
-          paymentMethodNonce: nounce,
-          options: {
-            submitForSettlement: true,
+        const { nonce, cart } = req.body;
+        let total = 0;
+        cart.map((i) => {
+          total += i.price;
+        });
+        let newTransaction = gateway.transaction.sale(
+          {
+            amount: total,
+            paymentMethodNonce: nonce,
+            options: {
+              submitForSettlement: true,
+            },
           },
-        },
-        function (error, result) {
-          if (result) {
-            // If the transaction is successful, create a new order
-            const order = new Order({
-              products: cart,
-              payment: result,
-              buyer: req.user._id,
-            }).save();
-  
-            // Send success response
-            res.status(200).json({
-              ok: true,
-            });
-          } else {
-            // Send error response if the transaction fails
-            res.status(500).send(error);
+          async function (error, result) {
+            console.log({ result });
+            if (result) {
+              try {
+                const order = await new Order({
+                    products: cart,
+                    payment: {
+                        id: result.transaction.id,  // Assuming you want to store the transaction ID
+                        status: result.transaction.status,
+                        amount: result.transaction.amount,
+                        currency: result.transaction.currencyIsoCode,
+                        // Include other fields as necessary
+                    },
+                    buyer: req.user._id,
+                }).save();
+                
+          
+                console.log({ order }); // Log the saved order to verify
+                res.json({ ok: true, order }); // Optionally return the order in response
+              } catch (err) {
+                console.error("Error saving order:", err);
+                res.status(500).json({ error: "Failed to save order" });
+              }
+            } else {
+              res.status(500).send(error);
+            }
           }
-        }
-      );
-    } catch (error) {
-      // Catch any errors and log them, also send a response
-      console.log(error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  };
+          
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+const getOrderDetails = async (req, res) => {
+try {
+    const buyer = req.user._id; // Assuming this is the buyer's ID
+
+    // Use find() to search for all orders where the buyer matches
+    const orders = await Order.find({ buyer }).populate('products', "-photo").populate('buyer', "name");
+
+    res.status(200).json({
+    message: "Order details fetched successfully",
+    success: true,
+    orders, // Returning all matching orders
+    });
+} catch (error) {
+    console.error(error);
+    res.status(400).json({
+    message: "Failed to fetch the order details",
+    success: false,
+    });
+}
+}
   
 
 export {
@@ -422,5 +446,6 @@ export {
     relatedProduct,
     productCategory,
     paymentToken,
-    paymentSubscribe
+    paymentSubscribe,
+    getOrderDetails
 }

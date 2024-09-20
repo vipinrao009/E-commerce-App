@@ -1,7 +1,7 @@
 import express from 'express'
 import { isAdmin, requireSignIn } from "../middleware/authMiddleware.js";
 import formidable from "express-formidable"
-import { createProduct, deleteProduct, getAllProduct, getPhoto, paymentSubscribe, paymentToken, productCategory, productCount, productFilter, productList, productSearch, relatedProduct, singleProduct, updateProduct } from '../controllers/productController.js';
+import { createProduct, deleteProduct, getAllProduct, getOrderDetails, getPhoto, paymentSubscribe, paymentToken, productCategory, productCount, productFilter, productList, productSearch, relatedProduct, singleProduct, updateProduct } from '../controllers/productController.js';
 const router = express.Router();
 
 router.post("/create-product",requireSignIn,isAdmin,formidable(),createProduct)
@@ -19,7 +19,8 @@ router.get("/product-category/:slug",productCategory)
 
 //payment token
 router.get('/payment/token',paymentToken)
-
 // make payment
 router.post('/payment/subscribe',requireSignIn,paymentSubscribe)
+//Get order
+router.get("/getOrderDetails",requireSignIn,getOrderDetails)
 export default router 

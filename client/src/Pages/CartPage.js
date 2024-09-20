@@ -7,6 +7,7 @@ import { baseUrl } from '../Layout/BaseUrl.js';
 import toast from 'react-hot-toast';
 import DropIn from 'braintree-web-drop-in-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
     const [auth, setAuth] = useAuth();
@@ -14,6 +15,7 @@ const CartPage = () => {
     const [clientToken, setClientToken] = useState("");  // Hold client token here
     const [instance, setInstance] = useState(null);  // Set DropIn instance here
     const [loading, setLoading] = useState(false);  // Loading state for button
+    const navigate = useNavigate()
 
     // Calculate total cart amount
     const totalAmount = () => {
@@ -70,11 +72,16 @@ const CartPage = () => {
                 nonce,
                 cart,
             });
-
-            setLoading(false);
-            localStorage.removeItem("cart");
-            setCart([]);
-            toast.success("Payment Completed Successfully!");
+            console.log({data})
+            if(data?.ok){
+                setLoading(false);
+                localStorage.removeItem("cart");
+                setCart([]);
+                navigate("/dashboard/user/orders");
+                toast.success("Payment Completed Successfully!");
+            }else{
+                toast.error("Payment failed")
+            }
         } catch (error) {
             console.log("Payment Error:", error);
             toast.error("Payment failed. Please try again.");

@@ -3,6 +3,19 @@ import Product from "../models/ProductSchema.js";
 import fs from 'fs'
 import e from "express";
 import Category from "../models/CategorySchema.js";
+import braintree from "braintree";
+import Order from "../models/OrderSchema.js";
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+// payment gateway
+var gateway = new braintree.BraintreeGateway({
+    environment: braintree.Environment.Sandbox,
+    merchantId: process.env.MERCHANT_ID,
+    publicKey: process.env.PUBLIC_KEY,
+    privateKey: process.env.PRIVATE_KEY,
+  });
 
 const createProduct = async(req,res)=>{
     try {
@@ -330,6 +343,71 @@ const productCategory = async(req,res)=>{
         })
     }
 }
+
+// Payment token
+
+const paymentToken = async(req,res)=>{
+    try {
+        gateway.clientToken.generate({},function(err,response){
+            if(err){
+                res.status(500).send(err);
+            }else{
+                res.status(200).send(response)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// subscribe payment
+const paymentSubscribe = async (req, res) => {
+    try {
+      const { cart, nounce } = req.body;
+
+      let total = 0;
+  
+      // Calculate total
+      cart.map((p) => {
+        total += p.price; 
+      });
+  
+      // Create a new transaction
+      let newTransaction = await gateway.transaction.sale(
+        {
+          amount: total,
+          paymentMethodNonce: nounce,
+          options: {
+            submitForSettlement: true,
+          },
+        },
+        function (error, result) {
+          if (result) {
+            // If the transaction is successful, create a new order
+            const order = new Order({
+              products: cart,
+              payment: result,
+              buyer: req.user._id,
+            }).save();
+  
+            // Send success response
+            res.status(200).json({
+              ok: true,
+            });
+          } else {
+            // Send error response if the transaction fails
+            res.status(500).send(error);
+          }
+        }
+      );
+    } catch (error) {
+      // Catch any errors and log them, also send a response
+      console.log(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
+  
+
 export {
     createProduct,
     getAllProduct,
@@ -342,5 +420,7 @@ export {
     productList,
     productSearch,
     relatedProduct,
-    productCategory
+    productCategory,
+    paymentToken,
+    paymentSubscribe
 }

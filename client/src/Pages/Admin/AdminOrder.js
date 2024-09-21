@@ -1,41 +1,59 @@
-import React, { useEffect, useState } from 'react'
-import Layout from '../../Layout/Layout'
-import UserMenu from '../../Layout/UserMenu'
-import toast from 'react-hot-toast'
 import axios from 'axios'
+import AdminMenu from '../../Layout/AdminMenu'
+import Layout from '../../Layout/Layout'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { baseUrl } from '../../Layout/BaseUrl'
 import moment from 'moment'
+import { Select } from 'antd'
 
-const Orders = () => {
-  const [order, setOrder] = useState([])
+const AdminOrder = () => {
+    const [status,setStatus] = useState(["Not Process", "Processing", "Shipped", "Delivered", "Canceled"])
+    const [order, setOrder] = useState();
+    const {Option} = Select
+    
 
-  // Get the order details
-  const orderDetails = async () => {
-    try {
-      const { data } = await axios.get(`${baseUrl}/api/v1/product/getOrderDetails`)
-      console.log({data})
-      setOrder(data?.orders)
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Something went wrong!')
+    const getOrder = async () => {
+        try {
+            const { data } = await axios.get(`${baseUrl}/api/v1/user/all-orders`);
+            console.log({ data });
+            if (data?.success) { 
+                setOrder(data?.orders);
+                toast.success('Order fetched successfully');
+            } else {
+                toast.error('Failed to fetch orders');
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || 'Error fetching orders');
+        }
+    };
+
+    const handleChangeStatus = async(orderID,value)=>{
+      console.log(" id ",orderID)
+        try {
+            const {data} = await axios.put(`${baseUrl}/api/v1/user/update-status/${orderID}`,{status:value})
+            toast.success(`Order ${value} successfully`)
+            getOrder()
+        } catch (error) {
+          toast.error(error.response?.data?.message || 'Error fetching orders');
+        }
     }
-  }
+    
 
-  useEffect(() => {
-    orderDetails();
-  }, []) // Empty dependency array to run only once
-
+    useEffect(()=>{
+        getOrder();
+    },[])
+    
   return (
-    <Layout title="Orders">
-      <div className='container-fluid m-3 p-3'>
-        <div className='row'>
-          <div className='col-md-3'>
-            <UserMenu />
-          </div>
-
-          <div className="col-md-9">
-            <div className="card p-3">
-              <h3>All orders</h3>
-              {order?.map((p,i)=>
+    <Layout>
+      <div className="row container-fluid mt-4">
+        <div className="col-md-3">
+            <AdminMenu/>
+        </div>
+        <div className="col-md-9">
+            <h1>All orders</h1>
+            {order?.map((p,i)=>
                 {
                   return(
                     <div className="border shadow">
@@ -53,7 +71,15 @@ const Orders = () => {
                         <tbody>
                           <tr>
                             <td>{}</td>
-                            <td>{p?.status}</td>
+                            <td>
+                                <Select bordered={false} onChange={(value)=>handleChangeStatus(p?._id,value)} defaultValue={p?.status}>
+                                    {status.map((s,i)=>(
+                                        <Option key={i} value={s}>
+                                            {s}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </td>
                             <td>{p?.buyer?.name}</td>
                             <td>{moment(p?.createAt).fromNow()}</td>
                             <td>{p?.payment?.amount ? "Success" : "Failed"}</td>
@@ -78,7 +104,7 @@ const Orders = () => {
                                      <div className="card-body ms-3 d-flex flex-column justify-content-center">
                                          <h5 className="card-title mb-2">{product.name}</h5>
                                          <p className="card-text mb-2">
-                                             {product.description.substring(0, 30)}...
+                                             {product.description.substring(0, 30)}
                                          </p>
                                          <p className="card-text">
                                              <strong>$ {product.price}</strong>
@@ -93,12 +119,10 @@ const Orders = () => {
                     </div>
                   )
                 })}
-            </div>
-          </div>
         </div>
       </div>
     </Layout>
   )
 }
 
-export default Orders
+export default AdminOrder

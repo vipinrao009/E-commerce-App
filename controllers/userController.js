@@ -1,4 +1,5 @@
 import { comparePassword, hashPassword } from "../helpers/userHelpers.js"
+import Order from "../models/OrderSchema.js"
 import User from "../models/userModel.js"
 import JWT from "jsonwebtoken"
 
@@ -214,10 +215,73 @@ const updateProfile = async(req,res)=>{
         })
     }
 }
+
+// Admin get all order
+const getAllOrder = async (req, res) => {
+    try {
+        // Use find() to search for all orders 
+        const orders = await Order
+            .find({})
+            .populate('products', "-photo")
+            .populate('buyer', "name")
+            .sort({ "createdAt": -1 });
+
+        // Check if orders array contains any elements
+        if (orders.length > 0) {
+            res.status(200).json({
+                message: "Order details fetched successfully",
+                success: true,
+                orders, // Returning all matching orders
+            });
+        } else {
+            res.status(200).json({
+                message: "No orders found",
+                success: true,
+                orders: [], // Empty array if no orders are found
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to get orders",
+            success: false,
+            error: error.message,
+        });
+    }
+};
+
+const updateStatus = async (req, res) => {
+    try {
+        // Correctly destructure orderID from req.params
+        const { orderID } = req.params;  
+        const { status } = req.body;
+        
+        // Use findByIdAndUpdate to update the order's status
+        const result = await Order.findByIdAndUpdate(orderID, { status }, { new: true });
+
+        // Respond with success message and updated result
+        res.status(200).json({
+            message: "Successfully updated status",
+            success: true,
+            result
+        });
+    } catch (error) {
+        // Handle any errors
+        res.status(500).json({
+            message: "Failed to update status",
+            success: false,
+            error
+        });
+    }
+};
+
+
 export {
     registerUser,
     login,
     test,
     forgotPassword,
-    updateProfile
+    updateProfile,
+    getAllOrder,
+    updateStatus
 }

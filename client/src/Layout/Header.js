@@ -26,7 +26,8 @@ const Header = () => {
     }
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+                <div className="container-fluid">
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -127,6 +128,7 @@ const Header = () => {
                             </Badge>
                         </li>
                     </ul>
+                </div>
                 </div>
             </nav>
 

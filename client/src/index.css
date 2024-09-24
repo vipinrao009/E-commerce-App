@@ -135,3 +135,6 @@
     margin-bottom: 9px;
 }
 
+html, body {
+    overflow-x: hidden; /* Disables horizontal scrolling */
+  }

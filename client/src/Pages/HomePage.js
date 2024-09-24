@@ -160,6 +160,7 @@ const HomePage = () => {
                     alt={product.name} 
                     style={{ width: '300px', height:'250px'}} 
                   />
+                  <hr />
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text">{product.description.substring(0,30)}</p>

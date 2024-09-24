@@ -1,1 +1,1 @@
-export const baseUrl = "http://localhost:8080"
+export const baseUrl = "https://e-commerce-app-1-zuls.onrender.com"

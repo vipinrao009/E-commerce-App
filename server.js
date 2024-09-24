@@ -7,6 +7,7 @@ import user from "./routes/userRoutes.js"
 import category from "./routes/categoryRoutes.js"
 import product from "./routes/productRoutes.js"
 import cors from "cors"
+import path from "path"
 
 //configure env
 dotenv.config();
@@ -16,6 +17,8 @@ connectDB()
 
 //rest object
 const app = express();
+
+const _dirname = path.resolve();
 
 //middleware
 app.use(
@@ -32,9 +35,14 @@ app.use("/api/v1/user",user)
 app.use("/api/v1/category",category)
 app.use("/api/v1/product",product)
 
-app.use("/", (req, res) => {
-  res.send("<h1>Welcome to ecommerce website</h1>");
-});
+// app.use("/", (req, res) => {
+//   res.send("<h1>Welcome to ecommerce website</h1>");
+// });
+
+app.use(express.static(path.join(_dirname,"/client/build")))
+app.get('*',(req,res)=>{
+  res.sendFile(path.resolve(_dirname,"client","build","index.html"))
+})
 
 const PORT = process.env.PORT;
 

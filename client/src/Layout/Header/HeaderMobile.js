@@ -46,11 +46,11 @@ const HeaderMobile = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
       <div className="container-fluid">
-        <Link to="/" className="navbar-brand fw-bold text-primary">
+        <Link to="/" className="navbar-brand ms-1 fw-bold text-primary">
           ShopEase
         </Link>
 
-        <form className="d-flex " style={{ width: "30%" }} role="search" onSubmit={handleSubmit}>
+        <form className="d-flex me-1 " style={{ width: "30%", height:"30px" }} role="search" onSubmit={handleSubmit}>
             <input
                 className="form-control me-2 w-33"
                 type="search"
@@ -59,13 +59,13 @@ const HeaderMobile = () => {
                 value={values.keyword}
                 onChange={(e)=>setValues({...values, keyword: e.target.value})}
             />
-            <button className="btn btn-outline-success" type="submit">
+            <button className="btn btn-outline-success d-flex align-items-center" type="submit">
             <i class="bi bi-search"></i>
             </button>
         </form>
 
         {/* Cart and Profile */}
-        <div className="d-flex align-items-center ms-3">
+        <div className="d-flex align-items-center ms-1">
           <Badge count={cart?.length} showZero offset={[4, 3]} className="me-3">
             <NavLink to="/cart" className="nav-link position-relative">
               <i className="bi bi-cart-fill fs-4"></i>
@@ -96,7 +96,7 @@ const HeaderMobile = () => {
         </div>
 
         <button
-          className="navbar-toggler ms-3"
+          className="navbar-toggler ms-3 fs-6"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#mobileNavbar"

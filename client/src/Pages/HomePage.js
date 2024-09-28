@@ -7,6 +7,7 @@ import {Checkbox , Radio} from 'antd'
 import { price } from '../components/Price';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/cart';
+import SearchInput from '../components/Form/SearchInput';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -120,6 +121,9 @@ const HomePage = () => {
 
   return (
     <Layout title={'Best offers'}>
+      <div className='m-3'>
+        <SearchInput/>
+      </div>
       <div className="row mt-3 center ms-2">
         <div className="col-md-2">
           <h4>Category</h4>

@@ -14,11 +14,9 @@ const SearchInput = () => {
         e.preventDefault();
         try {
             const {data} = await axios.get(`${baseUrl}/api/v1/product/product-search/${values.keyword}`);
-            console.log(data)
             if(data?.success){
                 setValues({...values, result:data})
             }
-            console.log('mmmmmmmmmmm',values)
             navigate("/search")
         } catch (error) {
             toast.error(error.response?.data?.message || "Error fetching search input");

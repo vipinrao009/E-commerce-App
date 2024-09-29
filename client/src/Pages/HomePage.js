@@ -3,7 +3,7 @@ import Layout from '../Layout/Layout';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { baseUrl } from  '.././Layout/BaseUrl'
-import {Checkbox , Radio} from 'antd'
+import {Checkbox , Radio, Select} from 'antd'
 import { price } from '../components/Price';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/cart';
@@ -121,22 +121,24 @@ const HomePage = () => {
 
   return (
     <Layout title={'Best offers'}>
-      <div className='m-3'>
-        <SearchInput/>
+      <div className='m-3 d-flex d-md-none'>
+        <SearchInput />
+        <button className='p-1 ms-2 btn btn-primary p-2'>Filter</button>
       </div>
-      <div className="row mt-3 center ms-2">
-        <div className="col-md-2">
-          <h4>Category</h4>
+      <div className="row m-3 d-flex justify-content-end  ms-2">
+        <div className="col-md-2 d-flex d-md-block">
           <div className="d-flex flex-column">
+          <h4>Category</h4>
             {category?.map((c)=>(
               <Checkbox key={c._id} onChange={(e)=>handleFilter(e.target.checked,c._id)}>
                 {c.name}
               </Checkbox>
-            ))}
+            ))} 
           </div>
 
+          
+          <div className="d-flex flex-column ms-5 ms-md-0 ms-justify-content-end">
           <h4>Price</h4>
-          <div className="d-flex flex-column">
             <Radio.Group onChange={(e)=> setRadio(e.target.value)}>
               {
                 price?.map((p)=>(
@@ -147,17 +149,29 @@ const HomePage = () => {
               }
             </Radio.Group>
           </div>
-
-          <div className="d-flex flex-column">
-            <button className='btn btn-danger mt-2' onClick={()=> window.location.reload()}>Reset Filters</button>
+          {/* Button for desktop */}
+          <div className="d-none d-md-flex">
+              <button className='btn btn-danger mt-2' onClick={() => window.location.reload()} style={{ width: 'auto' }}>
+                  Reset Filters
+              </button>
           </div>
+
         </div>
+
+        {/* button for mobile */}
+        <div className="d-flex flex-column d-md-none flex-md-row justify-content-md-end">
+            <button className='btn btn-danger mt-2' onClick={() => window.location.reload()} style={{ width: 'auto' }}>
+                Reset Filters
+            </button>
+        </div>
+
+
 
         <div className="col-md-9 mx-4">
           <h1 className='text-center'>All Products</h1>
           <div className="d-flex flex-wrap justify-content-center">
             {products?.map((product) => (
-                <div key={product._id} className="card m-2" style={{width:'18rem'}}>
+                <div key={product._id} className="card m-1" style={{width:'18rem'}}>
                   <img 
                     src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
                     className="card-img-top small-card-img"

@@ -26,9 +26,13 @@ const HeaderDesktop = () => {
                 <Link to="/" className="navbar-brand">
                     ShopEase
                 </Link>
-                <SearchInput />
+               
                 <div className="collapse navbar-collapse">
+                    
                     <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
+                        <div className='me-4 mt-1'>
+                          <SearchInput />
+                        </div>
                         <li className="nav-item">
                             <NavLink to="/" className="nav-link">
                                 Home

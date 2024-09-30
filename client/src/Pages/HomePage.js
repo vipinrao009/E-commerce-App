@@ -19,6 +19,12 @@ const HomePage = () => {
   const [loading, setLoading] = useState(1) //Initially false 
   const [cart,setCart] = useCart();
   const navigate = useNavigate()
+  const [showFilters, setShowFilters] = useState(false);
+  
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+  
 
 
   const getAllCategory = async () => {
@@ -26,7 +32,6 @@ const HomePage = () => {
       const { data } = await axios.get(`${baseUrl}/api/v1/category/get-category`);
       if (data?.success) {
         setCategories(data.category);
-        toast.success("Fetched the categories.");
       }
     } catch (error) {
       console.log(error);
@@ -41,7 +46,6 @@ const HomePage = () => {
       setLoading(false)
       setProducts(data?.product)
       if (data?.success) {
-        toast.success(data.message);
         setProducts(data.product);
       } else {
         toast.error('Failed to fetch products');
@@ -78,7 +82,6 @@ const HomePage = () => {
     try {
       setLoading(true)
       const {data} = await axios.get(`${baseUrl}/api/v1/product/product-list/${page}`);
-      console.log('more data',{data})
       setLoading(false)
       setProducts([...products, ...data?.product])
     } catch (error) {
@@ -110,7 +113,6 @@ const HomePage = () => {
     try {
       const {data} = await axios.post(`${baseUrl}/api/v1/product/product-filter`,{radio,checked})
       if(data.success){
-        console.log(data)
         setProducts(data?.products)
         toast.success(data.message)
       }
@@ -121,12 +123,54 @@ const HomePage = () => {
 
   return (
     <Layout title={'Best offers'}>
+
+      {/* Filters for mobile */}
       <div className='m-3 d-flex d-md-none'>
         <SearchInput />
-        <button className='p-1 ms-2 btn btn-primary p-2'>Filter</button>
+        <button className='p-1 ms-2 btn btn-primary p-2' onClick={toggleFilters}>
+          {showFilters ? 'Filters' : 'Filters'}
+        </button>
       </div>
+
+      {showFilters && (
+        <div className="row m-3 d-flex justify-content-end ms-2 ">
+          <div className="col-md-2 d-flex d-md-block">
+            <div className="d-flex flex-column">
+            <h4>Category</h4>
+              {category?.map((c)=>(
+                <Checkbox key={c._id} onChange={(e)=>handleFilter(e.target.checked,c._id)}>
+                  {c.name}
+                </Checkbox>
+              ))} 
+            </div>
+
+            
+            <div className="d-flex flex-column ms-5 ms-md-0 ms-justify-content-end">
+            <h4>Price</h4>
+              <Radio.Group onChange={(e)=> setRadio(e.target.value)}>
+                {
+                  price?.map((p)=>(
+                    <div key={p.name} className="div">
+                      <Radio value={p.array}>{p.name}</Radio>
+                    </div>
+                  ))
+                }
+              </Radio.Group>
+            </div>
+            {/* Button for desktop */}
+            <div className="d-none d-md-flex">
+                <button className='btn btn-danger mt-2' onClick={() => window.location.reload()} style={{ width: 'auto' }}>
+                    Reset Filters
+                </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Filters for desktop */}
       <div className="row m-3 d-flex justify-content-end  ms-2">
-        <div className="col-md-2 d-flex d-md-block">
+        <div className="col-md-2 d-none d-flex d-md-block">
           <div className="d-flex flex-column">
           <h4>Category</h4>
             {category?.map((c)=>(
@@ -158,58 +202,94 @@ const HomePage = () => {
 
         </div>
 
-        {/* button for mobile */}
-        <div className="d-flex flex-column d-md-none flex-md-row justify-content-md-end">
-            <button className='btn btn-danger mt-2' onClick={() => window.location.reload()} style={{ width: 'auto' }}>
-                Reset Filters
-            </button>
+        <div className="col-12 col-md-9 mx-auto px-3">
+  <h1 className="text-center mb-4">All Products</h1>
+
+  <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
+    {products?.map((product) => (
+      <div key={product._id} className="col d-flex justify-content-center">
+        {/* Small Card for Mobile */}
+        <div className="card d-md-none shadow-sm" style={{ width: '10rem', borderRadius: '8px', overflow: 'hidden' }}>
+        <img
+          src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
+          className="card-img-top"
+          alt={product.name}
+          style={{ width: '100%', height: '120px', objectFit: 'cover', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}
+        />
+
+        <div className="card-body d-flex flex-column justify-content-between p-2" style={{ minHeight: '90px' }}>
+          <div className="product-info  mb-2">
+            <div className='d-flex justify-content-between'>
+            <h6 className="card-title text-truncate" style={{ fontSize: '0.9rem', marginBottom: '4px' }}>{product.name}</h6>
+            <p className="card-text fw-bold mb-2" style={{ fontSize: '0.85rem', color: '#333' }}>${product.price}</p>
+            </div>
+            {/* <p>{product.description}</p> */}
+          </div>
+
+          <button className="btn btn-success btn-sm w-100 mt-auto"
+            onClick={() => {
+              setCart([...cart, product]);
+              localStorage.setItem('cart', JSON.stringify([...cart, product]));
+              toast.success("Item added to cart");
+            }}
+            style={{ fontSize: '0.8rem', padding: '6px 0' }}
+          >
+            Add to Cart
+          </button>
         </div>
+      </div>
 
 
-
-        <div className="col-md-9 mx-4">
-          <h1 className='text-center'>All Products</h1>
-          <div className="d-flex flex-wrap justify-content-center">
-            {products?.map((product) => (
-                <div key={product._id} className="card m-1" style={{width:'18rem'}}>
-                  <img 
-                    src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
-                    className="card-img-top small-card-img"
-                    alt={product.name} 
-                    style={{ width: '300px', height:'250px'}} 
-                  />
-                  <hr />
-                  <div className="card-body">
-                    <h5 className="card-title">{product.name}</h5>
-                    <p className="card-text">{product.description.substring(0,30)}</p>
-                    <p className="card-text">$ {product.price}</p>
-                    <button className='btn btn-primary ms-1' onClick={()=> navigate(`/detailed-product/${product.slug}`)}>More details</button>
-                    <button className='btn btn-primary ms-1' 
-                        onClick={()=>{
-                        setCart([...cart,product])
-                        localStorage.setItem('cart',JSON.stringify([...cart,product]))
-                        toast.success("Item added to cart")
-                        }}
-                        >Add to Cart
-                    </button>
-                  </div>
-                </div>
-            ))}
-
-            <div className='m-2 p-3'>
-              {products && products.length < total && (
-                <button 
-                  className='btn btn-warning' 
-                  onClick={(e)=>{
-                  e.preventDefault();
-                  setPage(page +1)
-                }}>
-                  {loading ? "loading..." : "Load More"}
-                </button>
-              )}
+        {/* Large Card for Desktop */}
+        <div className="card h-100 d-none d-md-block" style={{ width: '18rem' }}> {/* Show on medium and above */}
+          <img
+            src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
+            className="card-img-top"
+            alt={product.name}
+            style={{ width: '100%', height: '250px', objectFit: 'cover' }}
+          />
+          <hr />
+          <div className="card-body d-flex flex-column">
+            <h5 className="card-title">{product.name}</h5>
+            <p className="card-text">{product.description.substring(0, 30)}</p>
+            <p className="card-text">$ {product.price}</p>
+            
+            <div className="mt-auto d-flex justify-content-between">
+              <button className="btn btn-primary" onClick={() => navigate(`/detailed-product/${product.slug}`)}>
+                More details
+              </button>
+              <button className="btn btn-success" 
+                onClick={() => {
+                  setCart([...cart, product]);
+                  localStorage.setItem('cart', JSON.stringify([...cart, product]));
+                  toast.success("Item added to cart");
+                }}
+              >
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>
+      </div>
+    ))}
+
+    <div className="col-12 text-center mt-3">
+      {products && products.length < total && (
+        <button 
+          className="btn btn-warning" 
+          onClick={(e) => {
+            e.preventDefault();
+            setPage(page + 1);
+          }}
+        >
+          {loading ? "Loading..." : "Load More"}
+        </button>
+      )}
+    </div>
+  </div>
+</div>
+
+
       </div>
     </Layout>
   );

@@ -55,7 +55,7 @@ const Orders = () => {
                             <td>{}</td>
                             <td>{p?.status}</td>
                             <td>{p?.buyer?.name}</td>
-                            <td>{moment(p?.createAt).fromNow()}</td>
+                            <td>{moment(p?.createAt).format('YYYY-MM-DD HH:mm')}</td>
                             <td>{p?.payment?.amount ? "Success" : "Failed"}</td>
                             <td>{p?.products?.length}</td>
                           </tr>

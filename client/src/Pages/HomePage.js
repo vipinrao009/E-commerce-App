@@ -5,7 +5,7 @@ import axios from 'axios';
 import { baseUrl } from  '.././Layout/BaseUrl'
 import {Checkbox , Radio, Select} from 'antd'
 import { price } from '../components/Price';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/cart';
 import SearchInput from '../components/Form/SearchInput';
 
@@ -205,39 +205,40 @@ const HomePage = () => {
         <div className="col-12 col-md-9 mx-auto px-3">
   <h1 className="text-center mb-4">All Products</h1>
 
-  <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
+  <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2 justify-content-center">
     {products?.map((product) => (
       <div key={product._id} className="col d-flex justify-content-center">
         {/* Small Card for Mobile */}
         <div className="card d-md-none shadow-sm" style={{ width: '10rem', borderRadius: '8px', overflow: 'hidden' }}>
-        <img
-          src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
-          className="card-img-top"
-          alt={product.name}
-          style={{ width: '100%', height: '120px', objectFit: 'cover', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}
-        />
-
-        <div className="card-body d-flex flex-column justify-content-between p-2" style={{ minHeight: '90px' }}>
-          <div className="product-info  mb-2">
-            <div className='d-flex justify-content-between'>
-            <h6 className="card-title text-truncate" style={{ fontSize: '0.9rem', marginBottom: '4px' }}>{product.name}</h6>
-            <p className="card-text fw-bold mb-2" style={{ fontSize: '0.85rem', color: '#333' }}>${product.price}</p>
+        <Link to={`/detailed-product/${product.slug}`}>
+          <img
+            src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
+            className="card-img-top"
+            alt={product.name}
+            style={{ width: '100%', height: '120px', objectFit: 'cover', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}
+          />
+         </Link>
+          <div className="card-body d-flex flex-column justify-content-between p-2" style={{ minHeight: '90px' }}>
+            <div className="product-info  mb-2">
+              <Link to={`/detailed-product/${product.slug}`} className="text-decoration-none d-flex justify-content-between">
+                <h6 className="card-title text-truncate" style={{ fontSize: '0.9rem', marginBottom: '4px' }}>{product.name}</h6>
+                <p className="card-text fw-bold mb-2" style={{ fontSize: '0.85rem', color: '#333' }}>${product.price}</p>
+              </Link>
+              {/* <p>{product.description}</p> */}
             </div>
-            {/* <p>{product.description}</p> */}
+            <button className="btn btn-success btn-sm w-100 mt-auto "
+              onClick={() => {
+                setCart([...cart, product]);
+                localStorage.setItem('cart', JSON.stringify([...cart, product]));
+                toast.success("Item added to cart");
+              }}
+              style={{ fontSize: '0.8rem', padding: '6px 0' }}
+            >
+              Add to Cart
+            </button>
           </div>
-
-          <button className="btn btn-success btn-sm w-100 mt-auto"
-            onClick={() => {
-              setCart([...cart, product]);
-              localStorage.setItem('cart', JSON.stringify([...cart, product]));
-              toast.success("Item added to cart");
-            }}
-            style={{ fontSize: '0.8rem', padding: '6px 0' }}
-          >
-            Add to Cart
-          </button>
+       
         </div>
-      </div>
 
 
         {/* Large Card for Desktop */}

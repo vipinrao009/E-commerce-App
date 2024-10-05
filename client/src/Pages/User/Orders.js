@@ -13,7 +13,6 @@ const Orders = () => {
   const orderDetails = async () => {
     try {
       const { data } = await axios.get(`${baseUrl}/api/v1/product/getOrderDetails`)
-      console.log({data})
       setOrder(data?.orders)
     } catch (error) {
       toast.error(error.response?.data?.message || 'Something went wrong!')
@@ -26,19 +25,20 @@ const Orders = () => {
 
   return (
     <Layout title="Orders">
-      <div className='container-fluid m-3 p-3'>
+      <div className='container-fluid p-3'>
         <div className='row'>
           <div className='col-md-3'>
             <UserMenu />
           </div>
 
           <div className="col-md-9">
-            <div className="card p-3">
+            <div className="card mt-2 mt-lg-0 p-3">
               <h3>All orders</h3>
               {order?.map((p,i)=>
                 {
                   return(
                     <div className="border shadow">
+                      <div className="table-responsive">
                       <table className='table'>
                         <thead>
                           <tr>
@@ -61,7 +61,7 @@ const Orders = () => {
                           </tr>
                         </tbody>
                       </table>
-
+                      </div>
                       <div className="container-fluid">
                       {p?.products?.map((product,index) => (
                              <div key={`${product._id}-${index}`} className="card mb-3">

@@ -85,19 +85,20 @@ const CreateCategory = () => {
 
     return (
         <Layout title={"Dashboard-create category"}>
-            <div className="container-fluid m-3 p-3">
+            <div className="container-fluid m-lg-3 p-3">
                 <div className="row">
                     <div className="col-md-3">
                         <AdminMenu/>
                     </div>
 
-                    <div className="col-md-9">
+                    <div className="col-md-9 mt-3">
                         <h2>Manage Category</h2>
-                        <div className='p-3'>
+                        <div className='p-2'>
+                        <h3>Create new category</h3>
                             <CategoryForm handleSubmit={handleSubmit} value={name} setValue={setName}/>
                         </div>
                         <div>
-                        <table className="table w-75">
+                        <table className="table">
                             <thead>
                                 <tr>
                                 <th scope="col">Name</th>
@@ -111,10 +112,10 @@ const CreateCategory = () => {
                                         <td>{c.name}</td>
                                         <td>
                                             <button 
-                                               className='btn btn-primary ms-2'
+                                               className='btn btn-primary p-1 p-lg-2 ms-2'
                                                onClick={() => {setVisible(true);setUpdatedName(c.name); setSelected(c)}}
                                                >Edit</button>
-                                            <button className='btn btn-danger ms-2'
+                                            <button className='btn btn-danger p-1 p-lg-2 ms-2'
                                                onClick={()=>{handleDelete(c._id)}}
                                             >Delete</button>
                                         </td>

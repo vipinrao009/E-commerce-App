@@ -30,7 +30,7 @@ const Products = () => {
 
     return (
         <Layout>
-            <div className="row">
+            <div className="row container-fluid m-lg-3 p-3">
                 <div className="col-md-3">
                     <AdminMenu />
                 </div>

@@ -57,6 +57,7 @@ const AdminOrder = () => {
                 {
                   return(
                     <div className="border shadow">
+                      <div className="table-responsive">
                       <table className='table'>
                         <thead>
                           <tr>
@@ -87,7 +88,7 @@ const AdminOrder = () => {
                           </tr>
                         </tbody>
                       </table>
-
+                      </div>
                       <div className="container-fluid">
                       {p?.products?.map((product,index) => (
                              <div key={`${product._id}-${index}`} className="card mb-3">

@@ -254,7 +254,7 @@ const productCount = async(req,res)=> {
 // Product list based on page
 const productList = async(req,res)=> {
     try {
-        const perPage = 3;
+        const perPage = 6;
         const page = req.params.page ? req.params.page : 1;
         const product = await Product
           .find({})

@@ -8,6 +8,7 @@ import { price } from '../components/Price';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/cart';
 import SearchInput from '../components/Form/SearchInput';
+import AutoImageSlider from './Slider/Slider';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -180,7 +181,6 @@ const HomePage = () => {
             ))} 
           </div>
 
-          
           <div className="d-flex flex-column ms-5 ms-md-0 ms-justify-content-end">
           <h4>Price</h4>
             <Radio.Group onChange={(e)=> setRadio(e.target.value)}>
@@ -200,97 +200,95 @@ const HomePage = () => {
               </button>
           </div>
 
-        </div>
+        </div>  
+         
+        <div className="col-12 col-md-9 mx-auto">
+        <AutoImageSlider/>
+            <h1 className="text-center mt-3 mb-4">All Products</h1>
+            <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2 justify-content-center">
+              {products?.map((product) => (
+                <div key={product._id} className="col d-flex justify-content-center">
+                  {/* Small Card for Mobile */}
+                  <div className="card d-md-none shadow-sm" style={{ width: '10rem', borderRadius: '8px', overflow: 'hidden' }}>
+                  <Link to={`/detailed-product/${product.slug}`}>
+                    <img
+                      src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
+                      className="card-img-top"
+                      alt={product.name}
+                      style={{ width: '100%', height: '120px', objectFit: 'cover', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}
+                    />
+                  </Link>
+                    <div className="card-body d-flex flex-column justify-content-between p-2" style={{ minHeight: '90px' }}>
+                      <div className="product-info  mb-2">
+                        <Link to={`/detailed-product/${product.slug}`} className="text-decoration-none d-flex justify-content-between">
+                          <h6 className="card-title text-truncate" style={{ fontSize: '0.9rem', marginBottom: '4px' }}>{product.name}</h6>
+                          <p className="card-text fw-bold mb-2" style={{ fontSize: '0.85rem', color: '#333' }}>${product.price}</p>
+                        </Link>
+                        {/* <p>{product.description}</p> */}
+                      </div>
+                      <button className="btn btn-success btn-sm w-100 mt-auto "
+                        onClick={() => {
+                          setCart([...cart, product]);
+                          localStorage.setItem('cart', JSON.stringify([...cart, product]));
+                          toast.success("Item added to cart");
+                        }}
+                        style={{ fontSize: '0.8rem', padding: '6px 0' }}
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                
+                  </div>
 
-        <div className="col-12 col-md-9 mx-auto px-3">
-  <h1 className="text-center mb-4">All Products</h1>
 
-  <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 g-2 justify-content-center">
-    {products?.map((product) => (
-      <div key={product._id} className="col d-flex justify-content-center">
-        {/* Small Card for Mobile */}
-        <div className="card d-md-none shadow-sm" style={{ width: '10rem', borderRadius: '8px', overflow: 'hidden' }}>
-        <Link to={`/detailed-product/${product.slug}`}>
-          <img
-            src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
-            className="card-img-top"
-            alt={product.name}
-            style={{ width: '100%', height: '120px', objectFit: 'cover', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}
-          />
-         </Link>
-          <div className="card-body d-flex flex-column justify-content-between p-2" style={{ minHeight: '90px' }}>
-            <div className="product-info  mb-2">
-              <Link to={`/detailed-product/${product.slug}`} className="text-decoration-none d-flex justify-content-between">
-                <h6 className="card-title text-truncate" style={{ fontSize: '0.9rem', marginBottom: '4px' }}>{product.name}</h6>
-                <p className="card-text fw-bold mb-2" style={{ fontSize: '0.85rem', color: '#333' }}>${product.price}</p>
-              </Link>
-              {/* <p>{product.description}</p> */}
+                  {/* Large Card for Desktop */}
+                  <div className="card h-100 d-none d-md-block" style={{ width: '18rem' }}> {/* Show on medium and above */}
+                    <img
+                      src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
+                      className="card-img-top"
+                      alt={product.name}
+                      style={{ width: '100%', height: '250px', objectFit: 'cover' }}
+                    />
+                    <hr />
+                    <div className="card-body d-flex flex-column">
+                      <h5 className="card-title">{product.name}</h5>
+                      <p className="card-text">{product.description.substring(0, 30)}</p>
+                      <p className="card-text">$ {product.price}</p>
+                      
+                      <div className="mt-auto d-flex justify-content-between">
+                        <button className="btn btn-primary" onClick={() => navigate(`/detailed-product/${product.slug}`)}>
+                          More details
+                        </button>
+                        <button className="btn btn-success" 
+                          onClick={() => {
+                            setCart([...cart, product]);
+                            localStorage.setItem('cart', JSON.stringify([...cart, product]));
+                            toast.success("Item added to cart");
+                          }}
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="col-12 text-center mt-3">
+                {products && products.length < total && (
+                  <button 
+                    className="btn btn-warning" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage(page + 1);
+                    }}
+                  >
+                    {loading ? "Loading..." : "Load More"}
+                  </button>
+                )}
+              </div>
             </div>
-            <button className="btn btn-success btn-sm w-100 mt-auto "
-              onClick={() => {
-                setCart([...cart, product]);
-                localStorage.setItem('cart', JSON.stringify([...cart, product]));
-                toast.success("Item added to cart");
-              }}
-              style={{ fontSize: '0.8rem', padding: '6px 0' }}
-            >
-              Add to Cart
-            </button>
-          </div>
-       
         </div>
-
-
-        {/* Large Card for Desktop */}
-        <div className="card h-100 d-none d-md-block" style={{ width: '18rem' }}> {/* Show on medium and above */}
-          <img
-            src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
-            className="card-img-top"
-            alt={product.name}
-            style={{ width: '100%', height: '250px', objectFit: 'cover' }}
-          />
-          <hr />
-          <div className="card-body d-flex flex-column">
-            <h5 className="card-title">{product.name}</h5>
-            <p className="card-text">{product.description.substring(0, 30)}</p>
-            <p className="card-text">$ {product.price}</p>
-            
-            <div className="mt-auto d-flex justify-content-between">
-              <button className="btn btn-primary" onClick={() => navigate(`/detailed-product/${product.slug}`)}>
-                More details
-              </button>
-              <button className="btn btn-success" 
-                onClick={() => {
-                  setCart([...cart, product]);
-                  localStorage.setItem('cart', JSON.stringify([...cart, product]));
-                  toast.success("Item added to cart");
-                }}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    ))}
-
-    <div className="col-12 text-center mt-3">
-      {products && products.length < total && (
-        <button 
-          className="btn btn-warning" 
-          onClick={(e) => {
-            e.preventDefault();
-            setPage(page + 1);
-          }}
-        >
-          {loading ? "Loading..." : "Load More"}
-        </button>
-      )}
-    </div>
-  </div>
-</div>
-
-
       </div>
     </Layout>
   );

@@ -6,7 +6,7 @@ import { baseUrl } from '../Layout/BaseUrl.js';
 import toast from 'react-hot-toast';
 import DropIn from 'braintree-web-drop-in-react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
     const [auth, setAuth] = useAuth();
@@ -117,29 +117,50 @@ const CartPage = () => {
                     </div>
                 </div>
 
-                <div className="row mt-5">
+                <div className="row  mt-lg-5">
                     <div className="col-md-7">
                         {cart?.map((product,index) => (
                             <div key={`${product._id}-${index}`} className="card mb-3">
                                 <div className="row g-0">
-                                    <div className="col-md-4 d-flex align-items-center justify-content-center">
-                                        <img
-                                            src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
-                                            className="img-fluid rounded-start"
-                                            alt={product.name}
-                                            style={{ width: '300px', height: '200px' }}
-                                        />
-                                    </div>
-                                    <div className="col-md-8">
-                                        <div className="card-body ms-3 d-flex flex-column justify-content-center">
-                                            <h5 className="card-title mb-2">{product.name}</h5>
-                                            <p className="card-text mb-2">
-                                                {product.description.substring(0, 30)}...
-                                            </p>
-                                            <p className="card-text">
-                                                <strong>$ {product.price}</strong>
-                                            </p>
+                                        <div className="col-md-4 d-flex align-items-center justify-content-center">
+                                            <Link to={`/detailed-product/${product.slug}`}>
+                                                <img
+                                                    src={`${baseUrl}/api/v1/product/get-photo/${product._id}`}
+                                                    className="img-fluid rounded-start"
+                                                    alt={product.name}
+                                                    style={{ width: '300px', height: '200px' }}
+                                                />
+                                            </Link>
                                         </div>
+
+                                    {/* for mobile screen */}
+                                    <div className="col-md-8 d-lg-none justify-content-center">
+                                    <Link to={`/detailed-product/${product.slug}`} className="text-decoration-none text-black">                                            <div className="card-body  p-3 d-flex justify-content-between">
+                                                <h5 className="card-title mb-2">{product.name}</h5>
+                                                <p className="card-text mb-2">
+                                                    
+                                                </p>
+                                                <p className="card-text">
+                                                    <strong>$ {product.price}</strong>
+                                                </p>
+                                            </div>
+                                       </Link>
+                                        <button onClick={() => removeCartItem(product._id)} className="btn btn-danger ms-3 mb-3" style={{width:"90%"}}>Remove</button>
+                                    </div>
+
+                                    {/* for desktop screen*/}
+                                    <div className="col-md-8 d-none d-lg-block">
+                                        <Link to={`/detailed-product/${product.slug}`} className="text-decoration-none">
+                                            <div className="card-body ms-3 text-black d-flex flex-column justify-content-center">
+                                                <h5 className="card-title mb-2">{product.name}</h5>
+                                                <p className="card-text mb-2">
+                                                    {product.description.substring(0, 30)}...
+                                                </p>
+                                                <p className="card-text">
+                                                    <strong>$ {product.price}</strong>
+                                                </p>
+                                            </div>
+                                        </Link>
                                         <button onClick={() => removeCartItem(product._id)} className="btn btn-danger ms-4">Remove</button>
                                     </div>
                                 </div>
@@ -172,7 +193,7 @@ const CartPage = () => {
                             )}
 
                             <button
-                                className="btn btn-primary"
+                                className="btn btn-primary mb-3"
                                 onClick={handlePayment}
                                 disabled={loading || !instance}
                             >

@@ -76,9 +76,25 @@ const HeaderMobile = () => {
                 Dashboard
               </Link>
               <hr className="dropdown-divider" />
-              <button className="dropdown-item text-danger" onClick={handleLogout}>
+              {auth.user = null ? (
+                <button className="dropdown-item text-danger" onClick={handleLogout}>
                 LOG OUT
-              </button>
+                </button>
+              ) : (
+                <>
+                  <li className="dropdown-item">
+                      <NavLink to="/register" className="nav-link">
+                          Register
+                      </NavLink>
+                  </li>
+                  <hr className="dropdown-divider" />
+                  <li className="dropdown-item">
+                      <NavLink to="/login" className="nav-link">
+                          Login
+                      </NavLink>
+                  </li>
+                </>
+              )}
             </div>
           )}
         </div>
